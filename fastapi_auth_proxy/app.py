@@ -40,7 +40,7 @@ async def proxy_get(request: Request, path: str, user: UserRequired):
     url = f"{REDIRECT_URL}/{path}"
     headers = {**request.headers}
     headers['accept-encoding'] = 'deflate'
-    async with httpx.AsyncClient() as client:
+    async with httpx.AsyncClient(timeout=120) as client:
         response = await client.get(url, headers=headers, params=request.query_params)
     print(f'GET "{url}", response length: {len(response.content) if response.content else 0}')
     return Response(
@@ -53,7 +53,7 @@ async def proxy_get(request: Request, path: str, user: UserRequired):
 @app.post("/{path:path}")
 async def proxy_post(request: Request, path: str, user: UserRequired):
     url = f"{REDIRECT_URL}/{path}"
-    async with httpx.AsyncClient() as client:
+    async with httpx.AsyncClient(timeout=120) as client:
         response = await client.post(url, content=await request.body(), headers=request.headers)
     print(f'POST "{url}"')
     return Response(
