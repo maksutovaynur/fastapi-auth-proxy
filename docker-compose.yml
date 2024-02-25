@@ -3,6 +3,6 @@ services:
   proxy:
     build: .
     restart: always
-    env_file: .env
-    command: ["uvicorn", "--host", "${APP_HOST:-127.0.0.1}", "--port", "${APP_PORT}", "fastapi_auth_proxy.app:app"]
+    env_file: "${ENV:-.env}"
+    command: ["uvicorn", "--host", "${FA_PROXY_APP_HOST:-127.0.0.1}", "--port", "${FA_PROXY_APP_PORT}", "fastapi_auth_proxy.app:app"]
     network_mode: host

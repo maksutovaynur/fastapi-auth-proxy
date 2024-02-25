@@ -1,12 +1,12 @@
 import secrets
 from typing import Annotated
-
+import logging
 import httpx
 from fastapi import FastAPI, Request, Response, Depends, HTTPException, WebSocket
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from starlette import status
 
-from fastapi_auth_proxy.env import ACCESS_USERNAME, ACCESS_PASSWORD, REDIRECT_URL
+from fastapi_auth_proxy.env import ACCESS_USERNAME, ACCESS_PASSWORD, REDIRECT_URL, APP_HOST, APP_PORT
 
 security = HTTPBasic()
 
@@ -28,6 +28,7 @@ UserRequired = Annotated[dict, Depends(check_user)]
 
 
 app = FastAPI(docs_url='/fastapi-proxy-docs')
+logging.info(f'start proxying from {APP_HOST}:{APP_PORT} to localhost:{REDIRECT_URL} for user {ACCESS_USERNAME}')
 
 
 @app.websocket("/{path:path}")
